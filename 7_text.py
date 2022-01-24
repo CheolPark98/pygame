@@ -1,3 +1,4 @@
+from threading import Timer
 from turtle import Screen, width
 import pygame
 
@@ -38,6 +39,15 @@ enemy_width = enemy_size[0] # 캐릭터의 가로 크기
 enemy_height = enemy_size[1] # 캐릭터의 세로 크기
 enemy_x_pos = screen_witdth / 2 - enemy_width / 2 #  화면 가로의 절반 크기에 해당하는 곳에 위치
 enemy_y_pos = screen_height/2 - enemy_height/2 #  화면 세로 크기 가장 아래에 해당하는 곳에 위치
+
+# 폰트 정의
+game_font= pygame.font.Font(None, 40)# 폰트 객체 생성 (폰트, 크기)
+
+#총 시간 
+total_time = 10
+
+# 시간 계산
+start_ticks = pygame.time.get_ticks()  # 시간 tick을 받아옴
 
 # 이벤트 루프: 대기?
 runnig = True
@@ -97,14 +107,31 @@ while runnig:
         print("충돌했어요")
         runnig = False # 게임종료
   
-
-
     screen.blit(background, (0, 0)) # 배경 그리기, (0, 0) 왼쪽 가장 위
 
     screen.blit(character, (character_x_pos, character_y_pos)) # 캐릭터 그리기
 
     screen.blit(enemy, (enemy_x_pos, enemy_y_pos)) #적그리기
 
+    # 타이머 집어 넣기
+    # 경과 시간 계산
+    elapsed_time = (pygame.time.get_ticks() - start_ticks) / 1000 
+    #경과 시간을 1000으로 나누어서 초 단위로 표시 ms/1000 = s
+
+    timer = game_font.render(str(int(total_time - elapsed_time)), True, (255, 255, 255)) #초 단위로 자르기위해 int
+
+    screen.blit(timer, (10,10))
+    
+    #만약 시간이 0 이하라면 게임종료
+    if total_time - elapsed_time <=0:
+        print("타임아웃")
+        runnig = False
+
     pygame.display.update() #게임화면을 다시 그리기 pygame은 매 프레임마다 디스플레이를 그려줘야함
+
+
+# 잠시 대기
+pygame.time.delay(2000) 
+
 
 pygame.quit()
