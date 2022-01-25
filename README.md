@@ -1,1 +1,1 @@
-# pygame_basic
+# pygame
